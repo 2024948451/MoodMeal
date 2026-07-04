@@ -3,7 +3,6 @@ package com.uitm.ict602.moodmeal;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Toast;
 
 public class FavouriteActivity extends Activity {
@@ -13,45 +12,45 @@ public class FavouriteActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_favourite);
 
-        // Back Button
-        findViewById(R.id.tvBackFav).setOnClickListener(v -> finish());
-
-        // Setup Remove Buttons (Just hiding the cards visually for the prototype)
-        findViewById(R.id.btnRemoveFav1).setOnClickListener(v -> {
-            ((View) v.getParent()).setVisibility(View.GONE);
-            toast("Removed from favourites!");
-        });
-
-        findViewById(R.id.btnRemoveFav2).setOnClickListener(v -> {
-            ((View) v.getParent()).setVisibility(View.GONE);
-            toast("Removed from favourites!");
-        });
-
-        setupBottomNav();
+        setupActions();
     }
 
-    private void setupBottomNav() {
-        findViewById(R.id.navHome).setOnClickListener(v -> {
-            startActivity(new Intent(this, HomeActivity.class));
-            finish(); // Close this page so it doesn't stack
-        });
+    private void setupActions() {
+        setClickIfExists("btnBackFavourite", () -> finish());
 
-        findViewById(R.id.navExplore).setOnClickListener(v ->
-                toast("Explore page is not included in this prototype."));
+        setClickIfExists("btnOpenMap", () ->
+                startActivity(new Intent(this, MapActivity.class)));
 
-        findViewById(R.id.navPlus).setOnClickListener(v ->
-                toast("Upload action placeholder."));
+        setClickIfExists("btnOpenReview", () ->
+                startActivity(new Intent(this, ReviewActivity.class)));
 
-        findViewById(R.id.navFav).setOnClickListener(v ->
-                toast("You are already on Favourites."));
+        setClickIfExists("btnRemoveFavourite", () ->
+                Toast.makeText(this, "Favourite removed.", Toast.LENGTH_SHORT).show());
 
-        findViewById(R.id.navProfile).setOnClickListener(v -> {
-            startActivity(new Intent(this, ManageAccountActivity.class));
-            finish();
-        });
+        setClickIfExists("navHome", () ->
+                startActivity(new Intent(this, HomeActivity.class)));
+
+        setClickIfExists("navExplore", () ->
+                startActivity(new Intent(this, MapActivity.class)));
+
+        setClickIfExists("navPlus", () ->
+                startActivity(new Intent(this, ReviewActivity.class)));
+
+        setClickIfExists("navFav", () ->
+                Toast.makeText(this, "You are already on Favourites.", Toast.LENGTH_SHORT).show());
+
+        setClickIfExists("navProfile", () ->
+                startActivity(new Intent(this, ManageAccountActivity.class)));
     }
 
-    private void toast(String message) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+    private void setClickIfExists(String idName, Runnable action) {
+        int id = getResources().getIdentifier(idName, "id", getPackageName());
+
+        if (id != 0) {
+            android.view.View view = findViewById(id);
+            if (view != null) {
+                view.setOnClickListener(v -> action.run());
+            }
+        }
     }
 }

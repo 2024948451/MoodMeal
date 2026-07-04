@@ -6,15 +6,13 @@
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:src="@drawable/bg_theme"
         android:scaleType="fitXY"
-        android:src="@drawable/bg_theme" />
+        android:contentDescription="MoodMeal background" />
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fillViewport="true"
-        android:overScrollMode="never"
-        android:paddingBottom="86dp"
         android:scrollbars="none">
 
         <LinearLayout
@@ -22,25 +20,27 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:paddingStart="26dp"
-            android:paddingTop="42dp"
             android:paddingEnd="26dp"
-            android:paddingBottom="60dp">
+            android:paddingTop="42dp"
+            android:paddingBottom="110dp">
 
             <TextView
-                android:id="@+id/tvBackReview"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="‹"
+                android:id="@+id/btnBackReview"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:gravity="center"
+                android:text="←"
                 android:textColor="@color/text_dark"
-                android:textSize="34sp" />
+                android:textSize="24sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="Upload Review"
+                android:text="Upload Food Review"
                 android:textColor="@color/dark_teal"
-                android:textSize="24sp"
+                android:textSize="28sp"
                 android:textStyle="bold" />
 
             <TextView
@@ -48,133 +48,74 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:gravity="center"
-                android:text="Share your food discovery and snap a picture\nto help fellow university students!"
-                android:textColor="@color/text_dark"
-                android:textSize="14sp" />
+                android:text="Capture your food and share your review."
+                android:textColor="@color/text_gray"
+                android:textSize="15sp"
+                android:textStyle="bold" />
 
-            <LinearLayout
+            <ImageView
+                android:id="@+id/ivFoodPreview"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="32dp"
-                android:orientation="vertical">
+                android:layout_height="230dp"
+                android:layout_marginTop="28dp"
+                android:background="@drawable/food_card_bg"
+                android:scaleType="centerCrop"
+                android:contentDescription="Food image preview" />
 
-                <EditText
-                    android:id="@+id/etPlaceName"
-                    android:layout_width="match_parent"
-                    android:layout_height="56dp"
-                    android:layout_marginBottom="16dp"
-                    android:background="@drawable/white_button"
-                    android:hint="Where did you eat? (e.g., Campus Café)"
-                    android:inputType="textPersonName"
-                    android:paddingStart="16dp"
-                    android:paddingEnd="16dp"
-                    android:textColor="@color/text_dark"
-                    android:textSize="14sp" />
+            <TextView
+                android:id="@+id/btnUploadImage"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_marginTop="18dp"
+                android:background="@drawable/primary_button"
+                android:gravity="center"
+                android:text="Open Camera"
+                android:textColor="@color/white"
+                android:textSize="17sp"
+                android:textStyle="bold" />
 
-                <Button
-                    android:id="@+id/btnCamera"
-                    android:layout_width="match_parent"
-                    android:layout_height="120dp"
-                    android:layout_marginBottom="16dp"
-                    android:backgroundTint="#EAEAEA"
-                    android:gravity="center"
-                    android:text="📸\nTap to Open Camera &amp; Upload Photo"
-                    android:textAllCaps="false"
-                    android:textColor="@color/text_dark"
-                    android:textSize="14sp"
-                    android:textStyle="bold" />
+            <EditText
+                android:id="@+id/etReviewText"
+                android:layout_width="match_parent"
+                android:layout_height="120dp"
+                android:layout_marginTop="18dp"
+                android:background="@drawable/field_bg"
+                android:gravity="top"
+                android:hint="Write your review..."
+                android:inputType="textMultiLine"
+                android:padding="16dp"
+                android:textColor="@color/text_dark"
+                android:textColorHint="@color/text_gray"
+                android:textSize="15sp" />
 
-                <EditText
-                    android:id="@+id/etReviewText"
-                    android:layout_width="match_parent"
-                    android:layout_height="140dp"
-                    android:layout_marginBottom="28dp"
-                    android:background="@drawable/white_button"
-                    android:gravity="top|start"
-                    android:hint="How was the food? Mention your mood match, the price, and overall vibes..."
-                    android:inputType="textMultiLine"
-                    android:maxLines="5"
-                    android:padding="16dp"
-                    android:textColor="@color/text_dark"
-                    android:textSize="14sp" />
+            <EditText
+                android:id="@+id/etRating"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_marginTop="14dp"
+                android:background="@drawable/field_bg"
+                android:hint="Rating e.g. 4.5"
+                android:inputType="numberDecimal"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:textColor="@color/text_dark"
+                android:textColorHint="@color/text_gray"
+                android:textSize="15sp" />
 
-            </LinearLayout>
-
-            <Button
+            <TextView
                 android:id="@+id/btnSubmitReview"
                 android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:backgroundTint="@color/dark_teal"
-                android:text="✓ Submit Food Review"
-                android:textAllCaps="false"
+                android:layout_height="56dp"
+                android:layout_marginTop="22dp"
+                android:background="@drawable/primary_button"
+                android:gravity="center"
+                android:text="Submit Review"
                 android:textColor="@color/white"
-                android:textSize="16sp"
+                android:textSize="17sp"
                 android:textStyle="bold" />
 
         </LinearLayout>
+
     </ScrollView>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="74dp"
-        android:layout_gravity="bottom"
-        android:background="@drawable/bottom_nav_bg"
-        android:gravity="center"
-        android:orientation="horizontal"
-        android:paddingStart="10dp"
-        android:paddingEnd="10dp">
-
-        <TextView
-            android:id="@+id/navHome"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="⌂\nHome"
-            android:textColor="@color/text_gray"
-            android:textSize="12sp" />
-
-        <TextView
-            android:id="@+id/navExplore"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="⌕\nExplore"
-            android:textColor="@color/text_gray"
-            android:textSize="12sp" />
-
-        <TextView
-            android:id="@+id/navPlus"
-            android:layout_width="56dp"
-            android:layout_height="56dp"
-            android:background="@drawable/circle_teal"
-            android:gravity="center"
-            android:text="+"
-            android:textColor="@color/white"
-            android:textSize="34sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/navFav"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="♡\nFavourites"
-            android:textColor="@color/text_gray"
-            android:textSize="12sp" />
-
-        <TextView
-            android:id="@+id/navProfile"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="♙\nProfile"
-            android:textColor="@color/text_gray"
-            android:textSize="12sp" />
-
-    </LinearLayout>
 
 </FrameLayout>

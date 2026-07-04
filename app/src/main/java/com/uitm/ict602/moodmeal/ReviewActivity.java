@@ -1,42 +1,119 @@
 package com.uitm.ict602.moodmeal;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 public class ReviewActivity extends Activity {
 
+    private static final int REQUEST_CAMERA_PERMISSION = 200;
+    private static final int REQUEST_IMAGE_CAPTURE = 201;
+
+    private ImageView ivFoodPreview;
+    private EditText etReviewText;
+    private EditText etRating;
+
+    private boolean hasImage = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_review); // Matches your XML name
+        setContentView(R.layout.activity_review);
 
-        EditText etPlaceName = findViewById(R.id.etPlaceName);
-        EditText etReviewText = findViewById(R.id.etReviewText);
-        Button btnCamera = findViewById(R.id.btnCamera);
-        Button btnSubmitReview = findViewById(R.id.btnSubmitReview);
+        ivFoodPreview = findViewById(R.id.ivFoodPreview);
+        etReviewText = findViewById(R.id.etReviewText);
+        etRating = findViewById(R.id.etRating);
 
-        // Open Camera Placeholder
-        btnCamera.setOnClickListener(v -> {
-            Toast.makeText(this, "Opening Camera...", Toast.LENGTH_SHORT).show();
-            // In the future, use: startActivityForResult(new Intent(MediaStore.ACTION_IMAGE_CAPTURE), 100);
-        });
+        findViewById(R.id.btnBackReview).setOnClickListener(v -> finish());
 
-        // Submit Action
-        btnSubmitReview.setOnClickListener(v -> {
-            String name = etPlaceName.getText().toString();
-            String review = etReviewText.getText().toString();
+        findViewById(R.id.btnUploadImage).setOnClickListener(v -> checkCameraPermissionAndOpen());
 
-            if (name.isEmpty() || review.isEmpty()) {
-                Toast.makeText(this, "Please fill in all details", Toast.LENGTH_SHORT).show();
+        findViewById(R.id.btnSubmitReview).setOnClickListener(v -> submitReview());
+    }
+
+    private void checkCameraPermissionAndOpen() {
+        if (checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(
+                    new String[]{Manifest.permission.CAMERA},
+                    REQUEST_CAMERA_PERMISSION
+            );
+        } else {
+            openCamera();
+        }
+    }
+
+    private void openCamera() {
+        Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+        if (cameraIntent.resolveActivity(getPackageManager()) != null) {
+            startActivityForResult(cameraIntent, REQUEST_IMAGE_CAPTURE);
+        } else {
+            Toast.makeText(this, "No camera app found on this device.", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void submitReview() {
+        String review = etReviewText.getText().toString().trim();
+        String rating = etRating.getText().toString().trim();
+
+        if (!hasImage) {
+            Toast.makeText(this, "Please capture a food image first.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (review.isEmpty()) {
+            etReviewText.setError("Review is required");
+            return;
+        }
+
+        if (rating.isEmpty()) {
+            etRating.setError("Rating is required");
+            return;
+        }
+
+        Toast.makeText(this, "Review uploaded successfully!", Toast.LENGTH_LONG).show();
+
+        Intent intent = new Intent(this, RecommendationActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (requestCode == REQUEST_CAMERA_PERMISSION) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                openCamera();
             } else {
-                Toast.makeText(this, "Review Submitted!", Toast.LENGTH_SHORT).show();
-                finish(); // Go back to previous screen
+                Toast.makeText(this, "Camera permission denied.", Toast.LENGTH_SHORT).show();
             }
-        });
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK && data != null) {
+            Bundle extras = data.getExtras();
+
+            if (extras != null) {
+                Bitmap imageBitmap = (Bitmap) extras.get("data");
+
+                if (imageBitmap != null) {
+                    ivFoodPreview.setImageBitmap(imageBitmap);
+                    hasImage = true;
+                    Toast.makeText(this, "Image captured.", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
     }
 }

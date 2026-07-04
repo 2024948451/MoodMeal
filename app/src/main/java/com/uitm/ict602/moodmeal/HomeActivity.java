@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,65 +24,100 @@ public class HomeActivity extends Activity {
         drawerPanel = findViewById(R.id.drawerPanel);
 
         setupDrawer();
-        setupMainActions();
+        setupHomeCards();
         setupBottomNav();
     }
 
-    private void setupMainActions() {
+    private void setupHomeCards() {
         findViewById(R.id.tvMenuHome).setOnClickListener(v -> openDrawer());
 
-        findViewById(R.id.btnSpinNow).setOnClickListener(v -> openMood());
-        findViewById(R.id.cardMoodSelection).setOnClickListener(v -> openMood());
+        findViewById(R.id.btnSpinNow).setOnClickListener(v ->
+                openActivity(MoodSelectionActivity.class));
+
+        findViewById(R.id.cardMoodSelection).setOnClickListener(v ->
+                openActivity(MoodSelectionActivity.class));
 
         findViewById(R.id.cardNearbyFood).setOnClickListener(v ->
-                startActivity(new Intent(this, MapActivity.class)));
+                openActivity(MapActivity.class));
 
         findViewById(R.id.cardFavourites).setOnClickListener(v ->
-                startActivity(new Intent(this, FavouriteActivity.class)));
+                openActivity(FavouriteActivity.class));
+
+        findViewById(R.id.cardUploadReview).setOnClickListener(v ->
+                openActivity(ReviewActivity.class));
 
         findViewById(R.id.cardReviews).setOnClickListener(v ->
-                startActivity(new Intent(this, ReviewActivity.class)));
+                openActivity(RecommendationActivity.class));
 
         findViewById(R.id.cardSettings).setOnClickListener(v ->
-                startActivity(new Intent(this, ManageAccountActivity.class)));
-
-        findViewById(R.id.cardSettings).setOnClickListener(v ->
-                startActivity(new Intent(this, ManageAccountActivity.class)));
+                openActivity(ManageAccountActivity.class));
     }
 
     private void setupDrawer() {
+        if (drawerOverlay == null || drawerPanel == null) {
+            return;
+        }
+
         drawerOverlay.setOnClickListener(v -> closeDrawer());
-        findViewById(R.id.btnCloseDrawer).setOnClickListener(v -> closeDrawer());
 
-        findViewById(R.id.drawerMood).setOnClickListener(v -> {
-            closeDrawer();
-            startActivity(new Intent(this, MoodSelectionActivity.class));
-        });
+        View closeButton = findViewById(R.id.btnCloseDrawer);
+        if (closeButton != null) {
+            closeButton.setOnClickListener(v -> closeDrawer());
+        }
 
-        findViewById(R.id.drawerAccount).setOnClickListener(v -> {
-            closeDrawer();
-            startActivity(new Intent(this, ManageAccountActivity.class));
-        });
+        View drawerMood = findViewById(R.id.drawerMood);
+        if (drawerMood != null) {
+            drawerMood.setOnClickListener(v -> {
+                closeDrawer();
+                openActivity(MoodSelectionActivity.class);
+            });
+        }
 
-        findViewById(R.id.drawerAbout).setOnClickListener(v -> {
-            closeDrawer();
-            Toast.makeText(
-                    this,
-                    "MoodMeal helps students decide what to eat based on mood.",
-                    Toast.LENGTH_LONG
-            ).show();
-        });
+        View drawerAccount = findViewById(R.id.drawerAccount);
+        if (drawerAccount != null) {
+            drawerAccount.setOnClickListener(v -> {
+                closeDrawer();
+                openActivity(ManageAccountActivity.class);
+            });
+        }
 
-        findViewById(R.id.drawerLogout).setOnClickListener(v -> {
-            MoodMealPrefs.logout(this);
+        View drawerAbout = findViewById(R.id.drawerAbout);
+        if (drawerAbout != null) {
+            drawerAbout.setOnClickListener(v -> {
+                closeDrawer();
+                toast("MoodMeal helps students decide what to eat based on mood.");
+            });
+        }
 
-            Intent intent = new Intent(this, LoginActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
-        });
+        View drawerLogout = findViewById(R.id.drawerLogout);
+        if (drawerLogout != null) {
+            drawerLogout.setOnClickListener(v -> logoutUser());
+        }
+    }
+
+    private void setupBottomNav() {
+        findViewById(R.id.navHome).setOnClickListener(v ->
+                toast("You are already on Home."));
+
+        findViewById(R.id.navExplore).setOnClickListener(v ->
+                openActivity(MapActivity.class));
+
+        findViewById(R.id.navPlus).setOnClickListener(v ->
+                openActivity(ReviewActivity.class));
+
+        findViewById(R.id.navFav).setOnClickListener(v ->
+                openActivity(FavouriteActivity.class));
+
+        findViewById(R.id.navProfile).setOnClickListener(v ->
+                openActivity(ManageAccountActivity.class));
     }
 
     private void openDrawer() {
+        if (drawerOverlay == null || drawerPanel == null) {
+            toast("Menu is not available.");
+            return;
+        }
+
         drawerOverlay.setAlpha(0f);
         drawerOverlay.setVisibility(View.VISIBLE);
 
@@ -99,6 +133,10 @@ public class HomeActivity extends Activity {
     }
 
     private void closeDrawer() {
+        if (drawerOverlay == null || drawerPanel == null) {
+            return;
+        }
+
         drawerOverlay.animate()
                 .alpha(0f)
                 .setDuration(180)
@@ -111,26 +149,17 @@ public class HomeActivity extends Activity {
                 .start();
     }
 
-    private void setupBottomNav() {
-        findViewById(R.id.navHome).setOnClickListener(v ->
-                toast("You are already on Home."));
+    private void logoutUser() {
+        MoodMealPrefs.logout(this);
 
-        findViewById(R.id.navExplore).setOnClickListener(v ->
-                toast("Explore page is not included in this 6-page prototype."));
-
-        findViewById(R.id.navPlus).setOnClickListener(v ->
-                toast("Upload action placeholder. Add camera feature later."));
-
-        // UPDATE THIS LINE TO OPEN FAVOURITE ACTIVITY
-        findViewById(R.id.navFav).setOnClickListener(v ->
-                startActivity(new Intent(this, FavouriteActivity.class)));
-
-        findViewById(R.id.navProfile).setOnClickListener(v ->
-                startActivity(new Intent(this, ManageAccountActivity.class)));
+        Intent intent = new Intent(this, LoginActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        finish();
     }
 
-    private void openMood() {
-        startActivity(new Intent(this, MoodSelectionActivity.class));
+    private void openActivity(Class<?> activityClass) {
+        startActivity(new Intent(this, activityClass));
     }
 
     private int dp(int value) {

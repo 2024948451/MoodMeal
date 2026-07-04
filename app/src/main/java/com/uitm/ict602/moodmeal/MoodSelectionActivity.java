@@ -39,8 +39,16 @@ public class MoodSelectionActivity extends Activity implements SensorEventListen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mood_selection);
 
+        ReminderHelper.requestNotificationPermissionIfNeeded(this);
+
         spinWheelView = findViewById(R.id.spinWheelView);
 
+        setupMoodButtons();
+        setupBottomNav();
+        setupShakeSensor();
+    }
+
+    private void setupMoodButtons() {
         findViewById(R.id.tvBackMood).setOnClickListener(v -> finish());
 
         findViewById(R.id.moodHungry).setOnClickListener(v -> showRecommendation("Hungry"));
@@ -53,9 +61,6 @@ public class MoodSelectionActivity extends Activity implements SensorEventListen
         findViewById(R.id.moodAdventurous).setOnClickListener(v -> showRecommendation("Adventurous"));
 
         findViewById(R.id.btnSpinMood).setOnClickListener(v -> spinMood());
-
-        setupBottomNav();
-        setupShakeSensor();
     }
 
     private void setupShakeSensor() {
@@ -87,54 +92,58 @@ public class MoodSelectionActivity extends Activity implements SensorEventListen
     }
 
     private void showRecommendation(String mood) {
-        String message;
+        String message = getRecommendationMessage(mood);
 
-        switch (mood) {
-            case "Hungry":
-                message = "Recommended food:\n🍛 Rice meals\n🍗 Heavy meals\n🍱 Affordable student set\n\nSuggested place:\nNasi Ayam Campus";
-                break;
+        ReminderHelper.scheduleFoodReminder(this, mood, 15);
 
-            case "Stressed":
-                message = "Recommended food:\n☕ Coffee\n🍰 Dessert\n🍜 Comfort food\n\nSuggested place:\nKopi Uni";
-                break;
-
-            case "Tired":
-                message = "Recommended food:\n☕ Coffee\n🥪 Quick meals\n🍌 Light snacks\n\nSuggested place:\nCampus Cafe Express";
-                break;
-
-            case "Happy":
-                message = "Recommended food:\n🍰 Dessert\n🧋 Boba\n🍕 Social food\n\nSuggested place:\nPizza Lab";
-                break;
-
-            case "Sad":
-                message = "Recommended food:\n🍲 Warm soup\n🍫 Sweet food\n🍜 Comfort meals\n\nSuggested place:\nComfort Bowl Cafe";
-                break;
-
-            case "Craving":
-                message = "Recommended food:\n🍟 Fries\n🌶 Spicy food\n🧋 Boba\n\nSuggested place:\nSnack Corner";
-                break;
-
-            case "Budget Mode":
-                message = "Recommended food:\n💰 Economy rice\n🍱 Student meal\n🍜 Food court meals\n\nSuggested place:\nCampus Food Court";
-                break;
-
-            case "Adventurous":
-                message = "Recommended food:\n🧭 Random menu\n🍔 New restaurant\n🌮 Unique food\n\nSuggested place:\nHidden Bite Spot";
-                break;
-
-            default:
-                message = "Try something delicious nearby!";
-                break;
-        }
+        Toast.makeText(this, "Food reminder scheduled for demo.", Toast.LENGTH_SHORT).show();
 
         new AlertDialog.Builder(this)
                 .setTitle("Mood Selected: " + mood)
                 .setMessage(message)
-                .setPositiveButton("Nice!", null)
+                .setPositiveButton("View Recommendation", (dialog, which) -> {
+                    Intent intent = new Intent(this, RecommendationActivity.class);
+                    intent.putExtra("selectedMood", mood);
+                    intent.putExtra("recommendationMessage", message);
+                    startActivity(intent);
+                })
                 .setNegativeButton("Back Home", (dialog, which) -> {
-                    startActivity(new Intent(this, HomeActivity.class));
+                    Intent intent = new Intent(this, HomeActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
                 })
                 .show();
+    }
+
+    private String getRecommendationMessage(String mood) {
+        switch (mood) {
+            case "Hungry":
+                return "Recommended food:\n🍛 Rice meals\n🍗 Heavy meals\n🍱 Affordable student set\n\nSuggested place:\nNasi Ayam Campus";
+
+            case "Stressed":
+                return "Recommended food:\n☕ Coffee\n🍰 Dessert\n🍜 Comfort food\n\nSuggested place:\nKopi Uni";
+
+            case "Tired":
+                return "Recommended food:\n☕ Coffee\n🥪 Quick meals\n🍌 Light snacks\n\nSuggested place:\nCampus Cafe Express";
+
+            case "Happy":
+                return "Recommended food:\n🍰 Dessert\n🧋 Boba\n🍕 Social food\n\nSuggested place:\nPizza Lab";
+
+            case "Sad":
+                return "Recommended food:\n🍲 Warm soup\n🍫 Sweet food\n🍜 Comfort meals\n\nSuggested place:\nComfort Bowl Cafe";
+
+            case "Craving":
+                return "Recommended food:\n🍟 Fries\n🌶 Spicy food\n🧋 Boba\n\nSuggested place:\nSnack Corner";
+
+            case "Budget Mode":
+                return "Recommended food:\n💰 Economy rice\n🍱 Student meal\n🍜 Food court meals\n\nSuggested place:\nCampus Food Court";
+
+            case "Adventurous":
+                return "Recommended food:\n🧭 Random menu\n🍔 New restaurant\n🌮 Unique food\n\nSuggested place:\nHidden Bite Spot";
+
+            default:
+                return "Try something delicious nearby!";
+        }
     }
 
     private void setupBottomNav() {
@@ -144,13 +153,13 @@ public class MoodSelectionActivity extends Activity implements SensorEventListen
         });
 
         findViewById(R.id.navExplore).setOnClickListener(v ->
-                toast("Explore page is not included in this 6-page prototype."));
+                startActivity(new Intent(this, MapActivity.class)));
 
         findViewById(R.id.navPlus).setOnClickListener(v ->
-                toast("Upload action placeholder. Add camera feature later."));
+                startActivity(new Intent(this, ReviewActivity.class)));
 
         findViewById(R.id.navFav).setOnClickListener(v ->
-                toast("Favourites page is not included in this 6-page prototype."));
+                startActivity(new Intent(this, FavouriteActivity.class)));
 
         findViewById(R.id.navProfile).setOnClickListener(v ->
                 startActivity(new Intent(this, ManageAccountActivity.class)));
@@ -209,10 +218,6 @@ public class MoodSelectionActivity extends Activity implements SensorEventListen
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
-        // Not needed for this prototype.
-    }
-
-    private void toast(String message) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+        // Not needed.
     }
 }
