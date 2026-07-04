@@ -19,6 +19,12 @@
         <activity android:name=".HomeActivity" />
         <activity android:name=".LoginActivity" />
         <activity android:name=".MainActivity" />
+        <activity android:name=".FavouriteActivity" />
+        <activity android:name=".RecommendationActivity" />
+        <activity android:name=".MapActivity" />
+        <activity android:name=".ReviewActivity" />
+        <activity android:name=".AdminCrudActivity" />
+
 
         <activity
             android:name=".SplashActivity"

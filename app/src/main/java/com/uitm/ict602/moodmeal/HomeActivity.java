@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,16 +36,16 @@ public class HomeActivity extends Activity {
         findViewById(R.id.cardMoodSelection).setOnClickListener(v -> openMood());
 
         findViewById(R.id.cardNearbyFood).setOnClickListener(v ->
-                toast("Nearby Food page is not included in this 6-page prototype."));
+                startActivity(new Intent(this, MapActivity.class)));
 
         findViewById(R.id.cardFavourites).setOnClickListener(v ->
-                toast("Favourites page is not included in this 6-page prototype."));
-
-        findViewById(R.id.cardUploadReview).setOnClickListener(v ->
-                toast("Camera upload review needs separate camera/storage module later."));
+                startActivity(new Intent(this, FavouriteActivity.class)));
 
         findViewById(R.id.cardReviews).setOnClickListener(v ->
-                toast("Reviews page is not included in this 6-page prototype."));
+                startActivity(new Intent(this, ReviewActivity.class)));
+
+        findViewById(R.id.cardSettings).setOnClickListener(v ->
+                startActivity(new Intent(this, ManageAccountActivity.class)));
 
         findViewById(R.id.cardSettings).setOnClickListener(v ->
                 startActivity(new Intent(this, ManageAccountActivity.class)));
@@ -120,8 +121,9 @@ public class HomeActivity extends Activity {
         findViewById(R.id.navPlus).setOnClickListener(v ->
                 toast("Upload action placeholder. Add camera feature later."));
 
+        // UPDATE THIS LINE TO OPEN FAVOURITE ACTIVITY
         findViewById(R.id.navFav).setOnClickListener(v ->
-                toast("Favourites page is not included in this 6-page prototype."));
+                startActivity(new Intent(this, FavouriteActivity.class)));
 
         findViewById(R.id.navProfile).setOnClickListener(v ->
                 startActivity(new Intent(this, ManageAccountActivity.class)));

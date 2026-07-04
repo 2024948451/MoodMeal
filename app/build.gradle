@@ -19,3 +19,15 @@ android {
         targetCompatibility JavaVersion.VERSION_17
     }
 }
+dependencies {
+    implementation libs.appcompat
+    implementation libs.material
+    implementation libs.constraintlayout
+    implementation libs.activity
+    implementation libs.androidx.fragment // Add this line
+    implementation libs.play.services.maps
+
+    testImplementation libs.junit
+    androidTestImplementation libs.ext.junit
+    androidTestImplementation libs.espresso.core
+}
