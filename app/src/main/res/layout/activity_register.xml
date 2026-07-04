@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/bg_theme"
+        android:scaleType="fitXY" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            android:paddingLeft="26dp"
+            android:paddingRight="26dp"
+            android:paddingTop="42dp"
+            android:paddingBottom="28dp">
+
+            <TextView
+                android:id="@+id/tvBackRegister"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="‹"
+                android:textSize="34sp"
+                android:textColor="@color/text_dark" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Create your\nMoodMeal account"
+                android:textColor="@color/dark_teal"
+                android:textStyle="bold"
+                android:textSize="24sp"
+                android:gravity="center"
+                android:lineSpacingExtra="3dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Join us and discover food\nthat fits your mood."
+                android:textColor="@color/text_dark"
+                android:textSize="14sp"
+                android:gravity="center"
+                android:layout_marginTop="10dp" />
+
+            <TextView
+                android:layout_width="82dp"
+                android:layout_height="82dp"
+                android:layout_marginTop="28dp"
+                android:background="@drawable/circle_white"
+                android:gravity="center"
+                android:text="👨‍🎓"
+                android:textSize="40sp" />
+
+            <EditText
+                android:id="@+id/etNameRegister"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_marginTop="22dp"
+                android:background="@drawable/field_bg"
+                android:hint="Full Name"
+                android:inputType="textPersonName"
+                android:textColor="@color/text_dark"
+                android:textColorHint="@color/text_gray"
+                android:textSize="14sp" />
+
+            <EditText
+                android:id="@+id/etEmailRegister"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/field_bg"
+                android:hint="Email"
+                android:inputType="textEmailAddress"
+                android:textColor="@color/text_dark"
+                android:textColorHint="@color/text_gray"
+                android:textSize="14sp" />
+
+            <EditText
+                android:id="@+id/etPasswordRegister"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/field_bg"
+                android:hint="Password"
+                android:inputType="textPassword"
+                android:textColor="@color/text_dark"
+                android:textColorHint="@color/text_gray"
+                android:textSize="14sp" />
+
+            <EditText
+                android:id="@+id/etConfirmRegister"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/field_bg"
+                android:hint="Confirm Password"
+                android:inputType="textPassword"
+                android:textColor="@color/text_dark"
+                android:textColorHint="@color/text_gray"
+                android:textSize="14sp" />
+
+            <CheckBox
+                android:id="@+id/cbTerms"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:text="I agree to the Terms of Service\nand Privacy Policy"
+                android:textColor="@color/text_dark"
+                android:textSize="13sp"
+                android:buttonTint="@color/teal" />
+
+            <TextView
+                android:id="@+id/btnCreateAccount"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_marginTop="14dp"
+                android:background="@drawable/primary_button"
+                android:gravity="center"
+                android:text="Create Account"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:textSize="16sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="or continue with"
+                android:textColor="@color/text_dark"
+                android:gravity="center"
+                android:textSize="14sp"
+                android:layout_marginTop="22dp" />
+
+            <TextView
+                android:id="@+id/btnGoogleRegister"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_marginTop="14dp"
+                android:background="@drawable/white_button"
+                android:gravity="center"
+                android:text="G   Google"
+                android:textColor="@color/text_dark"
+                android:textStyle="bold"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/btnEmailRegister"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/white_button"
+                android:gravity="center"
+                android:text="✉   Continue with Email"
+                android:textColor="@color/text_dark"
+                android:textStyle="bold"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/tvLoginRegister"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Already have an account? Log in"
+                android:textColor="@color/text_dark"
+                android:gravity="center"
+                android:textSize="14sp"
+                android:layout_marginTop="28dp" />
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</FrameLayout>
