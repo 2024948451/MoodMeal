@@ -9,4 +9,17 @@
         android:src="@drawable/splash_full"
         android:scaleType="centerCrop" />
 
+    <ProgressBar
+        android:id="@+id/splashProgress"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="92dp"
+        android:layout_height="6dp"
+        android:layout_gravity="bottom|center_horizontal"
+        android:layout_marginBottom="78dp"
+        android:max="100"
+        android:progress="0"
+        android:progressDrawable="@drawable/splash_progress"
+        android:indeterminate="false" />
+
+
 </FrameLayout>

@@ -20,6 +20,12 @@ public class MoodMealPrefs {
         return context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
     }
 
+    // Used by RegisterActivity new version
+    public static void register(Context context, String fullName, String email, String password) {
+        saveUser(context, fullName, email, password);
+    }
+
+    // Used by old RegisterActivity version
     public static void saveUser(Context context, String name, String email, String password) {
         prefs(context).edit()
                 .putString(KEY_NAME, name)
@@ -49,7 +55,9 @@ public class MoodMealPrefs {
     }
 
     public static void logout(Context context) {
-        prefs(context).edit().putBoolean(KEY_LOGGED_IN, false).apply();
+        prefs(context).edit()
+                .putBoolean(KEY_LOGGED_IN, false)
+                .apply();
     }
 
     public static void deleteAccount(Context context) {
@@ -66,11 +74,17 @@ public class MoodMealPrefs {
         return name.trim().isEmpty() ? DEMO_NAME : name;
     }
 
+    public static String getFullName(Context context) {
+        return getName(context);
+    }
+
     public static String getFirstName(Context context) {
         String fullName = getName(context).trim();
+
         if (fullName.contains(" ")) {
             return fullName.substring(0, fullName.indexOf(" "));
         }
+
         return fullName;
     }
 

@@ -2,8 +2,16 @@ package com.uitm.ict602.moodmeal;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.method.HideReturnsTransformationMethod;
+import android.text.method.PasswordTransformationMethod;
+import android.text.style.ForegroundColorSpan;
+import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -11,6 +19,8 @@ public class LoginActivity extends Activity {
 
     private EditText etEmail;
     private EditText etPassword;
+    private ImageView ivTogglePassword;
+    private boolean passwordVisible = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,12 +29,15 @@ public class LoginActivity extends Activity {
 
         etEmail = findViewById(R.id.etEmail);
         etPassword = findViewById(R.id.etPassword);
+        ivTogglePassword = findViewById(R.id.ivTogglePassword);
 
         TextView btnLogin = findViewById(R.id.btnLogin);
-        TextView btnGoogle = findViewById(R.id.btnGoogle);
-        TextView btnEmailLink = findViewById(R.id.btnEmailLink);
+        View btnGoogle = findViewById(R.id.btnGoogle);
+        View btnEmailLink = findViewById(R.id.btnEmailLink);
         TextView tvForgot = findViewById(R.id.tvForgot);
         TextView tvRegister = findViewById(R.id.tvRegister);
+
+        colorRegisterText(tvRegister);
 
         btnLogin.setOnClickListener(v -> loginUser());
 
@@ -37,12 +50,45 @@ public class LoginActivity extends Activity {
         });
 
         btnGoogle.setOnClickListener(v -> {
-            Toast.makeText(this, "Google login is UI demo only. Add Firebase later.", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Google login is UI demo only. Firebase will be added later.", Toast.LENGTH_LONG).show();
         });
 
         btnEmailLink.setOnClickListener(v -> {
-            Toast.makeText(this, "Email link login is UI demo only. Add Firebase later.", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Email link login is UI demo only. Firebase will be added later.", Toast.LENGTH_LONG).show();
         });
+
+        ivTogglePassword.setOnClickListener(v -> togglePasswordVisibility());
+    }
+
+    private void colorRegisterText(TextView tvRegister) {
+        String text = "Don’t have an account? Register";
+        SpannableString spannable = new SpannableString(text);
+
+        int start = text.indexOf("Register");
+        int end = text.length();
+
+        if (start >= 0) {
+            spannable.setSpan(
+                    new ForegroundColorSpan(Color.parseColor("#009B93")),
+                    start,
+                    end,
+                    Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+            );
+        }
+
+        tvRegister.setText(spannable);
+    }
+
+    private void togglePasswordVisibility() {
+        if (passwordVisible) {
+            etPassword.setTransformationMethod(PasswordTransformationMethod.getInstance());
+            passwordVisible = false;
+        } else {
+            etPassword.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+            passwordVisible = true;
+        }
+
+        etPassword.setSelection(etPassword.getText().length());
     }
 
     private void loginUser() {

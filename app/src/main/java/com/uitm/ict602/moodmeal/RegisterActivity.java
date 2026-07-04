@@ -2,68 +2,158 @@ package com.uitm.ict602.moodmeal;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.method.HideReturnsTransformationMethod;
+import android.text.method.PasswordTransformationMethod;
+import android.text.style.ForegroundColorSpan;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 public class RegisterActivity extends Activity {
 
-    private EditText etName;
-    private EditText etEmail;
-    private EditText etPassword;
-    private EditText etConfirm;
+    private EditText etFullName, etEmail, etPassword, etConfirmPassword;
     private CheckBox cbTerms;
+    private ImageView ivTogglePassword, ivToggleConfirmPassword;
+    private boolean passwordVisible = false;
+    private boolean confirmPasswordVisible = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        etName = findViewById(R.id.etNameRegister);
-        etEmail = findViewById(R.id.etEmailRegister);
-        etPassword = findViewById(R.id.etPasswordRegister);
-        etConfirm = findViewById(R.id.etConfirmRegister);
+        etFullName = findViewById(R.id.etFullName);
+        etEmail = findViewById(R.id.etEmail);
+        etPassword = findViewById(R.id.etPassword);
+        etConfirmPassword = findViewById(R.id.etConfirmPassword);
         cbTerms = findViewById(R.id.cbTerms);
+        ivTogglePassword = findViewById(R.id.ivTogglePassword);
+        ivToggleConfirmPassword = findViewById(R.id.ivToggleConfirmPassword);
 
-        TextView btnCreate = findViewById(R.id.btnCreateAccount);
-        TextView tvLogin = findViewById(R.id.tvLoginRegister);
-        TextView tvBack = findViewById(R.id.tvBackRegister);
-        TextView btnGoogle = findViewById(R.id.btnGoogleRegister);
-        TextView btnEmail = findViewById(R.id.btnEmailRegister);
+        TextView tvTermsText = findViewById(R.id.tvTermsText);
+        TextView tvLogin = findViewById(R.id.tvLogin);
 
-        btnCreate.setOnClickListener(v -> createAccount());
+        styleTermsText(tvTermsText);
+        styleLoginText(tvLogin);
 
-        tvLogin.setOnClickListener(v -> {
+        findViewById(R.id.btnBackRegister).setOnClickListener(v -> finish());
+
+        findViewById(R.id.ivTogglePassword).setOnClickListener(v -> togglePassword());
+        findViewById(R.id.ivToggleConfirmPassword).setOnClickListener(v -> toggleConfirmPassword());
+
+        findViewById(R.id.btnAvatarCamera).setOnClickListener(v ->
+                Toast.makeText(this, "Profile image upload can be added later.", Toast.LENGTH_SHORT).show());
+
+        findViewById(R.id.btnCreateAccount).setOnClickListener(v -> registerUser());
+
+        findViewById(R.id.btnGoogle).setOnClickListener(v ->
+                Toast.makeText(this, "Google sign-up is UI demo only.", Toast.LENGTH_SHORT).show());
+
+        findViewById(R.id.btnEmail).setOnClickListener(v ->
+                Toast.makeText(this, "Email sign-up selected.", Toast.LENGTH_SHORT).show());
+
+        findViewById(R.id.tvLogin).setOnClickListener(v -> {
             startActivity(new Intent(this, LoginActivity.class));
             finish();
         });
-
-        tvBack.setOnClickListener(v -> finish());
-
-        btnGoogle.setOnClickListener(v -> {
-            Toast.makeText(this, "Google register is UI demo only. Add Firebase later.", Toast.LENGTH_LONG).show();
-        });
-
-        btnEmail.setOnClickListener(v -> {
-            Toast.makeText(this, "Email register is UI demo only. Use Create Account button.", Toast.LENGTH_LONG).show();
-        });
     }
 
-    private void createAccount() {
-        String name = etName.getText().toString().trim();
-        String email = etEmail.getText().toString().trim();
-        String password = etPassword.getText().toString();
-        String confirm = etConfirm.getText().toString();
+    private void styleTermsText(TextView tvTermsText) {
+        String text = "I agree to the Terms of Service and Privacy Policy";
+        SpannableString spannable = new SpannableString(text);
 
-        if (name.isEmpty()) {
-            etName.setError("Full name is required");
+        int termsStart = text.indexOf("Terms of Service");
+        int termsEnd = termsStart + "Terms of Service".length();
+
+        int privacyStart = text.indexOf("Privacy Policy");
+        int privacyEnd = privacyStart + "Privacy Policy".length();
+
+        if (termsStart >= 0) {
+            spannable.setSpan(
+                    new ForegroundColorSpan(Color.parseColor("#009B93")),
+                    termsStart,
+                    termsEnd,
+                    Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+            );
+        }
+
+        if (privacyStart >= 0) {
+            spannable.setSpan(
+                    new ForegroundColorSpan(Color.parseColor("#009B93")),
+                    privacyStart,
+                    privacyEnd,
+                    Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+            );
+        }
+
+        tvTermsText.setText(spannable);
+    }
+
+    private void styleLoginText(TextView tvLogin) {
+        String text = "Already have an account? Log in";
+        SpannableString spannable = new SpannableString(text);
+
+        int start = text.indexOf("Log in");
+        int end = text.length();
+
+        if (start >= 0) {
+            spannable.setSpan(
+                    new ForegroundColorSpan(Color.parseColor("#009B93")),
+                    start,
+                    end,
+                    Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+            );
+        }
+
+        tvLogin.setText(spannable);
+    }
+
+    private void togglePassword() {
+        if (passwordVisible) {
+            etPassword.setTransformationMethod(PasswordTransformationMethod.getInstance());
+            passwordVisible = false;
+        } else {
+            etPassword.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+            passwordVisible = true;
+        }
+        etPassword.setSelection(etPassword.getText().length());
+    }
+
+    private void toggleConfirmPassword() {
+        if (confirmPasswordVisible) {
+            etConfirmPassword.setTransformationMethod(PasswordTransformationMethod.getInstance());
+            confirmPasswordVisible = false;
+        } else {
+            etConfirmPassword.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+            confirmPasswordVisible = true;
+        }
+        etConfirmPassword.setSelection(etConfirmPassword.getText().length());
+    }
+
+    private void registerUser() {
+        String fullName = etFullName.getText().toString().trim();
+        String email = etEmail.getText().toString().trim();
+        String password = etPassword.getText().toString().trim();
+        String confirmPassword = etConfirmPassword.getText().toString().trim();
+
+        if (fullName.isEmpty()) {
+            etFullName.setError("Full name is required");
             return;
         }
 
-        if (email.isEmpty() || !email.contains("@")) {
-            etEmail.setError("Valid email is required");
+        if (email.isEmpty()) {
+            etEmail.setError("Email is required");
+            return;
+        }
+
+        if (password.isEmpty()) {
+            etPassword.setError("Password is required");
             return;
         }
 
@@ -72,20 +162,26 @@ public class RegisterActivity extends Activity {
             return;
         }
 
-        if (!password.equals(confirm)) {
-            etConfirm.setError("Password does not match");
+        if (confirmPassword.isEmpty()) {
+            etConfirmPassword.setError("Please confirm password");
+            return;
+        }
+
+        if (!password.equals(confirmPassword)) {
+            etConfirmPassword.setError("Password does not match");
             return;
         }
 
         if (!cbTerms.isChecked()) {
-            Toast.makeText(this, "Please agree to Terms and Privacy Policy", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Please agree to the terms first.", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        MoodMealPrefs.saveUser(this, name, email, password);
+        MoodMealPrefs.register(this, fullName, email, password);
 
         Toast.makeText(this, "Account created successfully!", Toast.LENGTH_SHORT).show();
-        startActivity(new Intent(this, HomeActivity.class));
+
+        startActivity(new Intent(this, LoginActivity.class));
         finish();
     }
 }
