@@ -137,16 +137,20 @@ public class ManageAccountActivity extends Activity {
         });
 
         findViewById(R.id.navExplore).setOnClickListener(v ->
-                toast("Explore page is not included in this 6-page prototype."));
+                openActivity(MapActivity.class));
 
         findViewById(R.id.navPlus).setOnClickListener(v ->
-                toast("Upload action placeholder. Add camera feature later."));
+                openActivity(ReviewActivity.class));
 
         findViewById(R.id.navFav).setOnClickListener(v ->
-                toast("Favourites page is not included in this 6-page prototype."));
+                openActivity(FavouriteActivity.class));
 
         findViewById(R.id.navProfile).setOnClickListener(v ->
                 toast("You are already on Profile."));
+    }
+
+    private void openActivity(Class<?> activityClass) {
+        startActivity(new Intent(this, activityClass));
     }
 
     private int dp(int value) {
