@@ -19,6 +19,11 @@ import android.widget.Toast;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.firestore.FieldValue;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class RegisterActivity extends Activity {
 
@@ -33,6 +38,7 @@ public class RegisterActivity extends Activity {
     private ImageView ivToggleConfirmPassword;
 
     private FirebaseAuth mAuth;
+    private FirebaseFirestore db;
 
     private boolean passwordVisible = false;
     private boolean confirmPasswordVisible = false;
@@ -42,8 +48,9 @@ public class RegisterActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        // Initialize Firebase Authentication
+        // Initialize Firebase services
         mAuth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
 
         initializeViews();
         initializeTextStyles();
@@ -59,7 +66,8 @@ public class RegisterActivity extends Activity {
         cbTerms = findViewById(R.id.cbTerms);
 
         ivTogglePassword = findViewById(R.id.ivTogglePassword);
-        ivToggleConfirmPassword = findViewById(R.id.ivToggleConfirmPassword);
+        ivToggleConfirmPassword =
+                findViewById(R.id.ivToggleConfirmPassword);
     }
 
     private void initializeTextStyles() {
@@ -71,51 +79,68 @@ public class RegisterActivity extends Activity {
     }
 
     private void initializeClickListeners() {
-        findViewById(R.id.btnBackRegister).setOnClickListener(v -> finish());
+        findViewById(R.id.btnBackRegister)
+                .setOnClickListener(v -> finish());
 
-        ivTogglePassword.setOnClickListener(v -> togglePassword());
+        ivTogglePassword.setOnClickListener(
+                v -> togglePassword()
+        );
 
         ivToggleConfirmPassword.setOnClickListener(
                 v -> toggleConfirmPassword()
         );
 
-        findViewById(R.id.btnAvatarCamera).setOnClickListener(v ->
-                Toast.makeText(
-                        RegisterActivity.this,
-                        "Profile image upload can be added later.",
-                        Toast.LENGTH_SHORT
-                ).show()
-        );
+        findViewById(R.id.btnAvatarCamera)
+                .setOnClickListener(v ->
+                        Toast.makeText(
+                                RegisterActivity.this,
+                                "Profile image upload can be added later.",
+                                Toast.LENGTH_SHORT
+                        ).show()
+                );
 
-        findViewById(R.id.btnCreateAccount).setOnClickListener(
-                v -> registerUser()
-        );
+        findViewById(R.id.btnCreateAccount)
+                .setOnClickListener(v -> registerUser());
 
-        findViewById(R.id.btnGoogle).setOnClickListener(v ->
-                Toast.makeText(
-                        RegisterActivity.this,
-                        "Google sign-up is currently unavailable.",
-                        Toast.LENGTH_SHORT
-                ).show()
-        );
+        findViewById(R.id.btnGoogle)
+                .setOnClickListener(v ->
+                        Toast.makeText(
+                                RegisterActivity.this,
+                                "Google sign-up is currently unavailable.",
+                                Toast.LENGTH_SHORT
+                        ).show()
+                );
 
-        findViewById(R.id.btnEmail).setOnClickListener(v ->
-                Toast.makeText(
-                        RegisterActivity.this,
-                        "Email sign-up selected.",
-                        Toast.LENGTH_SHORT
-                ).show()
-        );
+        findViewById(R.id.btnEmail)
+                .setOnClickListener(v ->
+                        Toast.makeText(
+                                RegisterActivity.this,
+                                "Email sign-up selected.",
+                                Toast.LENGTH_SHORT
+                        ).show()
+                );
 
-        findViewById(R.id.tvLogin).setOnClickListener(v -> openLoginActivity());
+        findViewById(R.id.tvLogin)
+                .setOnClickListener(v -> openLoginActivity());
     }
 
     private void styleTermsText(TextView tvTermsText) {
-        String text = "I agree to the Terms of Service and Privacy Policy";
+        String text =
+                "I agree to the Terms of Service and Privacy Policy";
+
         SpannableString spannable = new SpannableString(text);
 
-        applyTextColor(spannable, text, "Terms of Service");
-        applyTextColor(spannable, text, "Privacy Policy");
+        applyTextColor(
+                spannable,
+                text,
+                "Terms of Service"
+        );
+
+        applyTextColor(
+                spannable,
+                text,
+                "Privacy Policy"
+        );
 
         tvTermsText.setText(spannable);
     }
@@ -124,7 +149,11 @@ public class RegisterActivity extends Activity {
         String text = "Already have an account? Log in";
         SpannableString spannable = new SpannableString(text);
 
-        applyTextColor(spannable, text, "Log in");
+        applyTextColor(
+                spannable,
+                text,
+                "Log in"
+        );
 
         tvLogin.setText(spannable);
     }
@@ -140,7 +169,9 @@ public class RegisterActivity extends Activity {
             int end = start + targetText.length();
 
             spannable.setSpan(
-                    new ForegroundColorSpan(Color.parseColor("#009B93")),
+                    new ForegroundColorSpan(
+                            Color.parseColor("#009B93")
+                    ),
                     start,
                     end,
                     Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
@@ -161,7 +192,9 @@ public class RegisterActivity extends Activity {
             );
         }
 
-        etPassword.setSelection(etPassword.getText().length());
+        etPassword.setSelection(
+                etPassword.getText().length()
+        );
     }
 
     private void toggleConfirmPassword() {
@@ -183,12 +216,17 @@ public class RegisterActivity extends Activity {
     }
 
     private void registerUser() {
-        String fullName = etFullName.getText().toString().trim();
-        String email = etEmail.getText().toString().trim();
+        String fullName =
+                etFullName.getText().toString().trim();
 
-        // Do not trim passwords because spaces may be intentional.
-        String password = etPassword.getText().toString();
-        String confirmPassword = etConfirmPassword.getText().toString();
+        String email =
+                etEmail.getText().toString().trim();
+
+        String password =
+                etPassword.getText().toString();
+
+        String confirmPassword =
+                etConfirmPassword.getText().toString();
 
         if (!validateInput(
                 fullName,
@@ -199,7 +237,11 @@ public class RegisterActivity extends Activity {
             return;
         }
 
-        createFirebaseAccount(fullName, email, password);
+        createFirebaseAccount(
+                fullName,
+                email,
+                password
+        );
     }
 
     private boolean validateInput(
@@ -236,18 +278,25 @@ public class RegisterActivity extends Activity {
             etPassword.setError(
                     "Password must be at least 6 characters"
             );
+
             etPassword.requestFocus();
             return false;
         }
 
         if (confirmPassword.isEmpty()) {
-            etConfirmPassword.setError("Please confirm your password");
+            etConfirmPassword.setError(
+                    "Please confirm your password"
+            );
+
             etConfirmPassword.requestFocus();
             return false;
         }
 
         if (!password.equals(confirmPassword)) {
-            etConfirmPassword.setError("Passwords do not match");
+            etConfirmPassword.setError(
+                    "Passwords do not match"
+            );
+
             etConfirmPassword.requestFocus();
             return false;
         }
@@ -273,29 +322,38 @@ public class RegisterActivity extends Activity {
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, task -> {
                     if (!task.isSuccessful()) {
-                        showRegistrationError(task.getException());
+                        showRegistrationError(
+                                task.getException()
+                        );
+
                         return;
                     }
 
-                    FirebaseUser currentUser = mAuth.getCurrentUser();
+                    FirebaseUser currentUser =
+                            mAuth.getCurrentUser();
 
                     if (currentUser == null) {
                         Toast.makeText(
                                 RegisterActivity.this,
-                                "Account was created, but user information could not be loaded.",
+                                "Account created, but user data could not be loaded.",
                                 Toast.LENGTH_LONG
                         ).show();
 
                         return;
                     }
 
-                    saveFirebaseDisplayName(currentUser, fullName);
+                    updateFirebaseProfile(
+                            currentUser,
+                            fullName,
+                            email
+                    );
                 });
     }
 
-    private void saveFirebaseDisplayName(
+    private void updateFirebaseProfile(
             FirebaseUser user,
-            String fullName
+            String fullName,
+            String email
     ) {
         UserProfileChangeRequest profileUpdate =
                 new UserProfileChangeRequest.Builder()
@@ -303,33 +361,57 @@ public class RegisterActivity extends Activity {
                         .build();
 
         user.updateProfile(profileUpdate)
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        Toast.makeText(
-                                RegisterActivity.this,
-                                "Account created successfully!",
-                                Toast.LENGTH_SHORT
-                        ).show();
-                    } else {
-                        Toast.makeText(
-                                RegisterActivity.this,
-                                "Account created, but the name could not be saved.",
-                                Toast.LENGTH_LONG
-                        ).show();
-                    }
+                .addOnCompleteListener(task ->
+                        saveUserToFirestore(
+                                user,
+                                fullName,
+                                email
+                        )
+                );
+    }
 
-                    // Registration automatically signs in the new user.
-                    // Sign out because the app returns to LoginActivity.
+    private void saveUserToFirestore(
+            FirebaseUser user,
+            String fullName,
+            String email
+    ) {
+        Map<String, Object> userData = new HashMap<>();
+
+        userData.put("uid", user.getUid());
+        userData.put("fullName", fullName);
+        userData.put("email", email);
+        userData.put("profileImageUrl", "");
+        userData.put("createdAt", FieldValue.serverTimestamp());
+
+        db.collection("users")
+                .document(user.getUid())
+                .set(userData)
+                .addOnSuccessListener(unused -> {
+                    Toast.makeText(
+                            RegisterActivity.this,
+                            "Account created successfully!",
+                            Toast.LENGTH_SHORT
+                    ).show();
+
                     mAuth.signOut();
-
                     openLoginActivity();
+                })
+                .addOnFailureListener(exception -> {
+                    Toast.makeText(
+                            RegisterActivity.this,
+                            "Account created, but profile data could not be saved: "
+                                    + exception.getMessage(),
+                            Toast.LENGTH_LONG
+                    ).show();
                 });
     }
 
     private void showRegistrationError(Exception exception) {
-        String errorMessage = "Account registration failed.";
+        String errorMessage =
+                "Account registration failed.";
 
-        if (exception != null && exception.getMessage() != null) {
+        if (exception != null
+                && exception.getMessage() != null) {
             errorMessage = exception.getMessage();
         }
 
