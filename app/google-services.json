@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1016771209676",
+    "project_id": "moodmeal-26628",
+    "storage_bucket": "moodmeal-26628.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1016771209676:android:51d8cecf5f52d611b59569",
+        "android_client_info": {
+          "package_name": "com.uitm.ict602.moodmeal"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAFpxDbxYsjgwI5CWEtEvE_a5rJgseW7Dk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
