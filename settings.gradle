@@ -1,21 +1,4 @@
 pluginManagement {
-    // Override the R8/D8 version bundled with AGP
-    buildscript {
-        repositories {
-            mavenCentral()
-
-            maven {
-                url = uri(
-                        "https://storage.googleapis.com/r8-releases/raw"
-                )
-            }
-        }
-
-        dependencies {
-            classpath("com.android.tools:r8:8.13.19")
-        }
-    }
-
     repositories {
         google {
             content {
@@ -31,9 +14,7 @@ pluginManagement {
 }
 
 dependencyResolutionManagement {
-    repositoriesMode.set(
-            RepositoriesMode.FAIL_ON_PROJECT_REPOS
-    )
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
 
     repositories {
         google()
